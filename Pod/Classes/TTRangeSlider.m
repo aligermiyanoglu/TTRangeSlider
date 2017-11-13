@@ -21,6 +21,8 @@ const float TEXT_HEIGHT = 14;
 @property (nonatomic, strong) CATextLayer *minLabel;
 @property (nonatomic, strong) CATextLayer *maxLabel;
 
+@property (nonatomic, strong) NSArray<NSString *> *dataSource;
+
 @property (nonatomic, assign) CGSize minLabelTextSize;
 @property (nonatomic, assign) CGSize maxLabelTextSize;
 
@@ -205,6 +207,14 @@ static const CGFloat kLabelsFontSize = 12.0f;
     }
 }
 
+- (void)setDataSource:(NSArray <NSString *> *)source {
+    self.dataSource = source;
+    
+    self.enableStep = YES;
+    self.step = 1.0;
+    self.minValue = 0.0;
+    self.maxValue = self.dataSource.count-1;
+}
 
 - (void)tintColorDidChange {
     CGColorRef color = self.tintColor.CGColor;
@@ -259,13 +269,16 @@ static const CGFloat kLabelsFontSize = 12.0f;
     if (self.hideLabels || [self.numberFormatterOverride isEqual:[NSNull null]]){
         self.minLabel.string = @"";
         self.maxLabel.string = @"";
-        return;
+        
+    } else if (self.dataSource) {
+        self.minLabel.string = self.dataSource[[@(self.selectedMinimum) integerValue]];
+        self.maxLabel.string = self.dataSource[[@(self.selectedMaximum) integerValue]];
+    } else {
+        NSNumberFormatter *formatter = (self.numberFormatterOverride != nil) ? self.numberFormatterOverride : self.decimalNumberFormatter;
+
+        self.minLabel.string = [formatter stringFromNumber:@(self.selectedMinimum)];
+        self.maxLabel.string = [formatter stringFromNumber:@(self.selectedMaximum)];
     }
-
-    NSNumberFormatter *formatter = (self.numberFormatterOverride != nil) ? self.numberFormatterOverride : self.decimalNumberFormatter;
-
-    self.minLabel.string = [formatter stringFromNumber:@(self.selectedMinimum)];
-    self.maxLabel.string = [formatter stringFromNumber:@(self.selectedMaximum)];
     
     self.minLabelTextSize = [self.minLabel.string sizeWithAttributes:@{NSFontAttributeName:self.minLabelFont}];
     self.maxLabelTextSize = [self.maxLabel.string sizeWithAttributes:@{NSFontAttributeName:self.maxLabelFont}];

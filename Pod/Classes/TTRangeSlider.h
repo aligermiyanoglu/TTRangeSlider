@@ -178,4 +178,6 @@ typedef NS_ENUM(NSInteger, LabelPosition) {
  */
 @property (nonatomic, assign) LabelPosition labelPosition;
 
+- (void)updateDataSource:(NSArray <NSString *> *)source;
+
 @end
