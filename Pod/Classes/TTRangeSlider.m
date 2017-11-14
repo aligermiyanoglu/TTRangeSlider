@@ -207,13 +207,13 @@ static const CGFloat kLabelsFontSize = 12.0f;
     }
 }
 
-- (void)setDataSource:(NSArray <NSString *> *)source {
+- (void)updateDataSource:(NSArray <NSString *> *)source {
     self.dataSource = source;
     
-    self.enableStep = YES;
-    self.step = 1.0;
-    self.minValue = 0.0;
-    self.maxValue = self.dataSource.count-1;
+    _enableStep = YES;
+    _step = 1.0;
+    _minValue = 0.0;
+    _maxValue = self.dataSource.count-1;
 }
 
 - (void)tintColorDidChange {
